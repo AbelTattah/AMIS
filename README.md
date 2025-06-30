@@ -2,6 +2,17 @@
 
 Inventory System for Atinka Meds
 
+
+### How to clone the project
+
+1. Open your terminal
+2. Type this command:
+```bash
+git clone -b develop https://github.com/AbelTattah/AMIS.git
+```
+
+Make sure you have git installed on your computer for this to work. If you don't have git installed, you can download it from [here](https://git-scm.com/)
+
 ---
 
 ### What's Inside
