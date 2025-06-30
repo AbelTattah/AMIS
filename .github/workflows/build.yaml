@@ -1,14 +1,25 @@
-name: Java Build
+name: Java Build and Test
 
 on: [push, pull_request]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+
+    - name: Verify project structure
+      run: |
+        if [ ! -f "src/main/java/com/gp27/amis/App.java" ]; then
+          echo "::error::Missing main class: src/main/java/com/gp27/amis/App.java"
+          exit 1
+        fi
+        if [ ! -f "src/main/resources/config.properties" ]; then
+          echo "::warning::Config file missing: src/main/resources/config.properties"
+        fi
 
     - name: Set up Java 11
       uses: actions/setup-java@v3
@@ -21,12 +32,41 @@ jobs:
 
     - name: Compile Java files
       run: |
-        javac -d out \
-          src/main/java/com/gp27/amis/App.java \
-          src/main/java/com/gp27/amis/utils/Helper.java
+        # Find all Java files
+        find src/main/java -name "*.java" > sources.txt
+        
+        if [ ! -s sources.txt ]; then
+          echo "::error::No Java files found to compile"
+          exit 1
+        fi
+        
+        javac -d out @sources.txt 2>&1 | tee errors.log
+        if [ ${PIPESTATUS[0]} -ne 0 ]; then
+          echo "::error::Compilation failed. Check errors:"
+          cat errors.log
+          exit 1
+        fi
 
     - name: Copy resources
-      run: cp src/main/resources/*.properties out/
+      run: |
+        if [ -d "src/main/resources" ]; then
+          cp -v src/main/resources/* out/ || echo "::warning::No resources to copy"
+        else
+          echo "::warning::Resources directory missing"
+        fi
 
-    - name: Run application (test)
-      run: java -cp out com.gp27.amis.App
+    - name: Verify class files
+      run: |
+        if [ ! -f "out/com/gp27/amis/App.class" ]; then
+          echo "::error::App.class not found after compilation"
+          exit 1
+        fi
+
+    - name: Test application run
+      run: |
+        # Check if application runs without crashing
+        if ! java -cp out com.gp27.amis.App; then
+          echo "::error::Application failed to run"
+          exit 1
+        fi
+        echo "Application ran successfully!"
