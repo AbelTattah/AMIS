@@ -44,9 +44,33 @@ AMIS/
 - Java Development Kit (JDK) 11 or higher. Download it by clicking [here](https://www.techspot.com/downloads/5553-java-jdk.html)
 - Text editor or Integrated Development Environment (IDE) like IntelliJ IDEA or Eclipse
 
-#### Step 1: Open Terminal
-- On Windows: Press `Windows + R`, type `cmd`, press Enter
-- On Mac: Open Spotlight (`Cmd + Space`), type `Terminal`, press Enter
+#### Building and Running with javac
+
+1. **Compile the project**:
+   ```bash
+   # Create output directory
+   mkdir -p target/classes
+   
+   # Compile all Java files
+   javac -d target/classes $(find src -name "*.java")
+   ```
+
+2. **Run the application**:
+   ```bash
+   # Run the main class
+   java -cp target/classes com.gp27.amis.App
+   ```
+
+#### Running Tests
+To run the test suite, use the following command:
+```bash
+java -cp target/classes org.junit.runner.JUnitCore com.gp27.amis.tests.AllTests
+```
+
+#### Development Workflow
+- The project uses GitHub Actions for CI/CD
+- On each push to `main` or `develop` branches, the code will be compiled and tested automatically
+- Make sure to run tests locally before pushing changes
 
 #### Step 2: Go to the Project Folder
 Type this in terminal (change path to where you saved AMIS):
