@@ -38,39 +38,111 @@ AMIS/
 
 ---
 
-### How to Run the Project
+# Atinka Meds Inventory System (AMIS)
 
-#### Prerequisites
-- Java Development Kit (JDK) 11 or higher. Download it by clicking [here](https://www.techspot.com/downloads/5553-java-jdk.html)
-- Text editor or Integrated Development Environment (IDE) like IntelliJ IDEA or Eclipse
+## Prerequisites
+- **Java Development Kit (JDK) 11 or higher**
+  - Download from [Oracle](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html) or [AdoptOpenJDK](https://adoptopenjdk.net/)
+  - Verify installation: `java -version` and `javac -version`
+- **PowerShell 5.1 or later** (included with Windows 10/11)
+  - Verify version: `$PSVersionTable.PSVersion`
 
-#### Building and Running with javac
+## Quick Start with PowerShell Script
 
-1. **Compile the project**:
-   ```bash
-   # Create output directory
-   mkdir -p target/classes
-   
-   # Compile all Java files
-   javac -d target/classes $(find src -name "*.java")
+The easiest way to run AMIS is using the provided PowerShell script:
+
+1. **Open PowerShell**
+   - Press `Win + X` and select "Windows PowerShell" or "Terminal"
+   - Navigate to the project directory:
+     ```powershell
+     cd "C:\path\to\AMIS"  # Replace with your actual path
+     ```
+
+2. **Run the script**
+   ```powershell
+   .\run.ps1
    ```
+   - First run will create necessary directories and empty data files
+   - The application will compile and start automatically
 
-2. **Run the application**:
-   ```bash
-   # Run the main class
-   java -cp target/classes com.gp27.amis.App
-   ```
+3. **Troubleshooting**
+   - If you get a security error, run:
+     ```powershell
+     Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+     ```
+   - Make sure Java is in your system PATH
 
-#### Running Tests
-To run the test suite, use the following command:
-```bash
-java -cp target/classes org.junit.runner.JUnitCore com.gp27.amis.tests.AllTests
+## Manual Build and Run
+
+### Windows (Command Prompt)
+```cmd
+:: Create output directory
+mkdir out
+
+:: Compile all Java files
+javac -d out src\main\java\com\gp27\amis\*.java src\main\java\com\gp27\amis\**\*.java
+
+:: Run the application
+java -cp out com.gp27.amis.App
 ```
 
-#### Development Workflow
-- The project uses GitHub Actions for CI/CD
-- On each push to `main` or `develop` branches, the code will be compiled and tested automatically
-- Make sure to run tests locally before pushing changes
+### Linux/macOS
+```bash
+# Create output directory
+mkdir -p out
+
+# Compile all Java files
+find src -name "*.java" > sources.txt
+javac -d out @sources.txt
+
+# Run the application
+java -cp out com.gp27.amis.App
+```
+
+## Project Structure
+```
+AMIS/
+├── data/                  # Data files (auto-created on first run)
+│   ├── drugs.txt          # Drug inventory
+│   ├── suppliers.txt      # Supplier information
+│   ├── customers.txt      # Customer records
+│   ├── purchase_history.txt
+│   └── sales_log.txt
+├── out/                   # Compiled .class files
+├── src/                   # Source code
+│   └── main/
+│       └── java/
+│           └── com/gp27/amis/
+│               ├── App.java           # Main application class
+│               ├── datastructures/    # Custom data structures
+│               ├── io/                # File I/O operations
+│               ├── models/            # Data models
+│               └── utils/             # Utility classes
+├── .github/workflows/     # CI/CD configuration
+├── run.ps1               # PowerShell build and run script
+└── README.md             # This file
+```
+
+## Development Workflow
+
+1. **Running Tests**
+   ```powershell
+   # After compiling with run.ps1 or manually
+   java -cp out org.junit.runner.JUnitCore com.gp27.amis.tests.AllTests
+   ```
+
+2. **Code Style**
+   - Follow Java naming conventions
+   - Use 4 spaces for indentation
+   - Add Javadoc for public methods and classes
+
+3. **Version Control**
+   - Create feature branches for new features
+   - Write meaningful commit messages
+   - Open pull requests for code review
+
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 #### Step 2: Go to the Project Folder
 Type this in terminal (change path to where you saved AMIS):
